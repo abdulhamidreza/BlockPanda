@@ -23,9 +23,9 @@ class CustomAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val ItemsViewModel = mList[position]
-        holder.imageView.setImageDrawable(ItemsViewModel.drawable)
-        holder.textView.text = ItemsViewModel.name
+        val item = mList[position]
+        holder.imageView.setImageDrawable(item.drawable)
+        holder.textView.text = item.name
 
         holder.remoteButtonView.setEnableEffect(true)
         holder.remoteButtonView.isChecked = false
