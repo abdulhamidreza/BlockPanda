@@ -1,4 +1,4 @@
-package com.example.blockpanda;
+package com.example.blockpanda.helper;
 
 import android.content.ComponentName;
 import android.content.Context;

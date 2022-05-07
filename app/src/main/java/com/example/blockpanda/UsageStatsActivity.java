@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.ArrayMap;
@@ -17,9 +18,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.blockpanda.helper.AndroidPackageManagerWrappers;
+import com.example.blockpanda.helper.CheckUsageStatsPermission;
+import com.example.blockpanda.helper.PromptAlertUserDialogs;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -39,6 +45,43 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
     private LayoutInflater mInflater;
     private UsageStatsAdapter mAdapter;
     private PackageManager mPm;
+
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    protected void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        setContentView(R.layout.activity_usage_stats);
+
+        // check for usage access permission
+        if (!CheckUsageStatsPermission.hasUsageStatsPermission(this)) {
+            PromptAlertUserDialogs.showDialogUsageAccessRequired(this);
+        }
+        //Todo on start showAutoStartPermissionScreen()
+
+        mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+        mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mPm = getPackageManager();
+
+        Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
+        typeSpinner.setOnItemSelectedListener(this);
+
+        ListView listView = (ListView) findViewById(R.id.pkg_list);
+        mAdapter = new UsageStatsAdapter();
+        listView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mAdapter.sortList(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // do nothing
+    }
+
 
     public static class AppNameComparator implements Comparator<UsageStats> {
         private Map<String, String> mAppLabelList;
@@ -75,6 +118,7 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
         TextView pkgName;
         TextView lastTimeUsed;
         TextView usageTime;
+        ImageView pkgIcon;
     }
 
     class UsageStatsAdapter extends BaseAdapter {
@@ -97,9 +141,6 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
             final List<UsageStats> stats =
                     mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST,
                             cal.getTimeInMillis(), System.currentTimeMillis());
-            final Map<String, UsageStats> stats1 =   mUsageStatsManager.queryAndAggregateUsageStats(cal.getTimeInMillis(), System.currentTimeMillis());
-            final int statCount1 = stats1.size();
-            Log.e(TAG, "stats size "+ statCount1);
 
             if (stats == null) {
                 Log.e(TAG, "stats is null");
@@ -108,26 +149,28 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
 
             ArrayMap<String, UsageStats> map = new ArrayMap<>();
             final int statCount = stats.size();
-            Log.e(TAG, "stats size "+ statCount);
+            Log.e(TAG, "stats size " + statCount);
             for (int i = 0; i < statCount; i++) {
                 final android.app.usage.UsageStats pkgStats = stats.get(i);
 
-                // load application labels for each application
-                try {
-                    ApplicationInfo appInfo = mPm.getApplicationInfo(pkgStats.getPackageName(), 0);
-                    String label = appInfo.loadLabel(mPm).toString();
-                    mAppLabelMap.put(pkgStats.getPackageName(), label);
+                if (!AndroidPackageManagerWrappers.isSystemApp(getApplicationContext(), pkgStats.getPackageName())) {
+                    // load application labels for each application
+                    try {
+                        ApplicationInfo appInfo = mPm.getApplicationInfo(pkgStats.getPackageName(), 0);
+                        String label = appInfo.loadLabel(mPm).toString();
+                        mAppLabelMap.put(pkgStats.getPackageName(), label);
 
-                    UsageStats existingStats =
-                            map.get(pkgStats.getPackageName());
-                    if (existingStats == null) {
-                        map.put(pkgStats.getPackageName(), pkgStats);
-                    } else {
-                        existingStats.add(pkgStats);
+                        UsageStats existingStats =
+                                map.get(pkgStats.getPackageName());
+                        if (existingStats == null) {
+                            map.put(pkgStats.getPackageName(), pkgStats);
+                        } else {
+                            existingStats.add(pkgStats);
+                        }
+
+                    } catch (NameNotFoundException e) {
+                        // This package may be gone.
                     }
-
-                } catch (NameNotFoundException e) {
-                    // This package may be gone.
                 }
             }
             mPackageStats.addAll(map.values());
@@ -170,6 +213,7 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
                 holder.pkgName = (TextView) convertView.findViewById(R.id.package_name);
                 holder.lastTimeUsed = (TextView) convertView.findViewById(R.id.last_time_used);
                 holder.usageTime = (TextView) convertView.findViewById(R.id.usage_time);
+                holder.pkgIcon = (ImageView) convertView.findViewById(R.id.package_icon);
                 convertView.setTag(holder);
             } else {
                 // Get the ViewHolder back to get fast access to the TextView
@@ -186,6 +230,9 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
                         System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM));
                 holder.usageTime.setText(
                         DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000));
+                Map<String, Drawable> s = AndroidPackageManagerWrappers.getAppIcons(getBaseContext());
+                Drawable icon = s.get(pkgStats.getPackageName());
+                holder.pkgIcon.setImageDrawable(icon);
             } else {
                 Log.w(TAG, "No usage stats info for package:" + position);
             }
@@ -216,38 +263,4 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
         }
     }
 
-    /**
-     * Called when the activity is first created.
-     */
-    @Override
-    protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        setContentView(R.layout.activity_usage_stats);
-
-        // check for usage access permission
-        if (!CheckUsageStatsPermission.hasUsageStatsPermission(this)) {
-            PromptAlertUserDialogs.showDialogUsageAccessRequired(this);
-        }
-
-        mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-        mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mPm = getPackageManager();
-
-        Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
-        typeSpinner.setOnItemSelectedListener(this);
-
-        ListView listView = (ListView) findViewById(R.id.pkg_list);
-        mAdapter = new UsageStatsAdapter();
-        listView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mAdapter.sortList(position);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // do nothing
-    }
 }
