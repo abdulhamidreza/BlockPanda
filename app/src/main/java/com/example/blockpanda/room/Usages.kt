@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class Usages(
     @PrimaryKey @ColumnInfo(name = "pkgName") val pkgName: String,
     @ColumnInfo(name = "appName") val appName: String,
+    @ColumnInfo(name = "isLock") val isLock: Boolean,
     @ColumnInfo(name = "isTimeLock") val isTimeLock: Boolean,
     @ColumnInfo(name = "isIntervalLock") val isIntervalLock: Boolean,
     @ColumnInfo(name = "isCountLock") val isCountLock: Boolean,
@@ -19,5 +20,5 @@ data class Usages(
     @ColumnInfo(name = "isBayPass") val isBayPass: Boolean,
     @ColumnInfo(name = "bayPassTime") val bayPassTime: String,
     @ColumnInfo(name = "bayPassCount") val bayPassCount: String,
-    @ColumnInfo(name = "inRemoteGroup") val inRemoteGroup: String,
+    @ColumnInfo(name = "inRemoteGroup") val inRemoteGroup: Boolean,
 )

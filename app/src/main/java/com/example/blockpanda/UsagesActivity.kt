@@ -1,6 +1,5 @@
 package com.example.blockpanda
 
-import CustomAdapter
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.pm.PackageManager
@@ -9,15 +8,11 @@ import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.blockpanda.helper.AndroidPackageManagerWrappers
-import com.example.blockpanda.helper.AppDetails
-import com.example.blockpanda.helper.CheckUsageStatsPermission
-import com.example.blockpanda.helper.PromptAlertUserDialogs
+import com.example.blockpanda.helper.*
+import com.example.blockpanda.room.Usages
 import java.util.*
 
 
@@ -26,7 +21,6 @@ class UsagesActivity : AppCompatActivity() {
     private val localLOGV = false
     private var mUsageStatsManager: UsageStatsManager? = null
     private var mInflater: LayoutInflater? = null
-    private val mAdapter: UsageStatsActivity.UsageStatsAdapter? = null
     private var mPm: PackageManager? = null
 
     // Constants defining order for display order
@@ -157,7 +151,6 @@ class UsagesActivity : AppCompatActivity() {
             if (localLOGV) Log.i(TAG, "Sorting by application name")
             Collections.sort(mPackageStats, mAppLabelComparator)
         }
-        mAdapter?.notifyDataSetChanged() // todo
     }
 
 
@@ -166,7 +159,10 @@ class UsagesActivity : AppCompatActivity() {
         for (i in apps) {
             val s = AndroidPackageManagerWrappers.getAppIcons(baseContext)
             val icon: Drawable = s.get(i.packageName)!!
-            appList.add(AppDetails(i.packageName, icon))
+              appList.add(AppDetails( icon , Usages("",""
+              ,false,false, false, false, false,
+                  "", "", "", "" , false,""
+                  ,"", false) ,i ))
         }
         return appList
     }

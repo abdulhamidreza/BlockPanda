@@ -1,3 +1,6 @@
+package com.example.blockpanda.helper;
+
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blockpanda.R
-import com.example.blockpanda.helper.AppDetails
 import com.suke.widget.SwitchButton
+import java.text.DateFormat
 
 
 class CustomAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
@@ -25,16 +28,29 @@ class CustomAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<
 
         val item = mList[position]
         holder.imageView.setImageDrawable(item.drawable)
-        holder.textView.text = item.name
+        holder.textView.text = item.pkgUsages.packageName
+
+        holder.textViewDay.text = DateUtils.formatSameDayTime(
+            item.pkgUsages.lastTimeUsed,
+            System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM
+        )
+        holder.textViewWk.setText(
+            DateUtils.formatElapsedTime(item.pkgUsages.totalTimeInForeground / 1000)
+        );
+
+        holder.textViewDay.text = DateUtils.formatSameDayTime(
+            item.pkgUsages.lastTimeUsed,
+            System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM
+        )
 
         holder.remoteButtonView.setEnableEffect(true)
-        holder.remoteButtonView.isChecked = false
+        holder.remoteButtonView.isChecked = item.usagesDb.isLock
         holder.remoteButtonView.setOnCheckedChangeListener(SwitchButton.OnCheckedChangeListener { view, isChecked ->
-         if (isChecked){
-             Log.d("*********** true", holder.textView.text.toString() )
-         }else{
-             Log.d("*********** false", holder.textView.text.toString() )
-         }
+            if (isChecked) {
+                Log.d("*********** true", holder.textView.text.toString())
+            } else {
+                Log.d("*********** false", holder.textView.text.toString())
+            }
         })
     }
 
@@ -46,7 +62,10 @@ class CustomAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageView: ImageView = itemView.findViewById(R.id.iconImageView)
-        val textView: TextView = itemView.findViewById(R.id.textView)
+        val textView: TextView = itemView.findViewById(R.id.appNameTextView)
+        val textViewDay: TextView = itemView.findViewById(R.id.textView)
+        val textViewWk: TextView = itemView.findViewById(R.id.textView2)
+        val textViewMn: TextView = itemView.findViewById(R.id.textView3)
         val remoteButtonView: com.suke.widget.SwitchButton = itemView.findViewById(R.id.remoteButtonView)
     }
 }
