@@ -67,9 +67,9 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
         Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
         typeSpinner.setOnItemSelectedListener(this);
 
-        ListView listView = (ListView) findViewById(R.id.pkg_list);
+      /*  ListView listView = (ListView) findViewById(R.id.pkg_list);
         mAdapter = new UsageStatsAdapter();
-        listView.setAdapter(mAdapter);
+        listView.setAdapter(mAdapter);*/
     }
 
     @Override
@@ -210,10 +210,10 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
                 // Creates a ViewHolder and store references to the two children views
                 // we want to bind data to.
                 holder = new AppViewHolder();
-                holder.pkgName = (TextView) convertView.findViewById(R.id.package_name);
-                holder.lastTimeUsed = (TextView) convertView.findViewById(R.id.last_time_used);
-                holder.usageTime = (TextView) convertView.findViewById(R.id.usage_time);
-                holder.pkgIcon = (ImageView) convertView.findViewById(R.id.package_icon);
+            //    holder.pkgName = (TextView) convertView.findViewById(R.id.package_name);
+             //   holder.lastTimeUsed = (TextView) convertView.findViewById(R.id.last_time_used);
+             //   holder.usageTime = (TextView) convertView.findViewById(R.id.usage_time);
+              //  holder.pkgIcon = (ImageView) convertView.findViewById(R.id.package_icon);
                 convertView.setTag(holder);
             } else {
                 // Get the ViewHolder back to get fast access to the TextView

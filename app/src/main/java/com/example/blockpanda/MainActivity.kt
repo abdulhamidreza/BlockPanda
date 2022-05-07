@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun callUsageStatsActivity() {
-        val lockIntent = Intent(this, UsageStatsActivity::class.java)
+        val lockIntent = Intent(this, UsagesActivity::class.java)
         lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         this.startActivity(lockIntent)
     }

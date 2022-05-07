@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BlockPanda">
         <activity
-            android:name=".UsageStatsActivity"
+            android:name=".UsagesActivity"
             android:exported="false" />
         <activity
             android:name=".main.LandingActivity"

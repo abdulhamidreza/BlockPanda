@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:text="@string/display_order_text"
-        android:paddingStart="12dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+tools:context=".UsagesActivity"
+    android:orientation="vertical">
 
     <Spinner
         android:id="@+id/typeSpinner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:entries="@array/usage_stats_display_order_types" />
+        android:entries="@array/usage_stats_display_order_types"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_width="match_parent"
         android:paddingStart="12dip"
-        android:layout_height="wrap_content" >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="6dip"
             android:text="@string/app_name_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="150dp"
-            android:paddingEnd="6dip"
-            android:layout_height="wrap_content" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="6dip"
             android:text="@string/last_time_used_label"
-            android:paddingEnd="6dip"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <TextView
-            android:text="@string/usage_time_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/usage_time_label"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
-    <ListView android:id="@+id/pkg_list"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvContacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:drawSelectorOnTop="false" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeSpinner" />
+</androidx.constraintlayout.widget.ConstraintLayout>
