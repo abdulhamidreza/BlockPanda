@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
 import android.view.LayoutInflater
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.blockpanda.helper.*
 import com.example.blockpanda.room.Usages
+import com.example.blockpanda.room.UsagesViewModel
 import java.util.*
 
 
@@ -33,6 +35,10 @@ class UsagesActivity : AppCompatActivity() {
     private val mAppLabelMap = ArrayMap<String, String>()
     private val mPackageStats = ArrayList<UsageStats>()
     var contacts: ArrayList<AppDetails>? = null
+
+    private val usageViewModel: UsagesViewModel by viewModels {
+        UsagesViewModel.UsagesViewModelFactory((application as MyApplication).repository)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +63,19 @@ class UsagesActivity : AppCompatActivity() {
         val adapter = CustomAdapter(contacts!!)
         recyclerview.adapter = adapter
 
+
+        //Db Call
+        var flagDbOnce = true
+        usageViewModel.getAllUserList.observe(this) { appList ->
+            run {
+                if (flagDbOnce) {
+                    flagDbOnce = false
+                   usageViewModel.insertNewApp(appList, usageStateList(), mPm)
+
+                }
+            }
+
+        }
 
     }
 
@@ -130,12 +149,17 @@ class UsagesActivity : AppCompatActivity() {
         for (i in apps) {
             val s = AndroidPackageManagerWrappers.getAppIcons(baseContext)
             val icon: Drawable = s.get(i.packageName)!!
-              appList.add(AppDetails( icon , Usages("",""
-              ,false,false, false, false, false,
-                  "", "", "", "" , false,""
-                  ,"", false) ,i ))
+            appList.add(
+                AppDetails(
+                    icon, Usages(
+                        "", "", false, false, false, false, false,
+                        "", "", "", "", false, "", "", false
+                    ), i
+                )
+            )
         }
         return appList
     }
+
 }
 
