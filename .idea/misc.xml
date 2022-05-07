@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/layout/activity_lock_screen.xml" value="0.22604166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2752548656163114" />
         <entry key="app/src/main/res/layout/activity_usage_stats.xml" value="0.22604166666666667" />
+        <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.22604166666666667" />
         <entry key="app/src/main/res/layout/usage_stats_item.xml" value="0.22604166666666667" />
       </map>
     </option>

@@ -64,12 +64,6 @@ public class UsageStatsActivity extends Activity implements OnItemSelectedListen
         mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mPm = getPackageManager();
 
-        Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
-        typeSpinner.setOnItemSelectedListener(this);
-
-      /*  ListView listView = (ListView) findViewById(R.id.pkg_list);
-        mAdapter = new UsageStatsAdapter();
-        listView.setAdapter(mAdapter);*/
     }
 
     @Override

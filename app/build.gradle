@@ -65,4 +65,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
+
+    //Switch button ui animation
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
 }
