@@ -1,10 +1,9 @@
-package com.ezylaw.lawbook.room
+package com.example.blockpanda.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.blockpanda.room.Usages
 import kotlinx.coroutines.CoroutineScope
 
 @Database(
@@ -14,21 +13,21 @@ import kotlinx.coroutines.CoroutineScope
     version = 1,
     exportSchema = false
 ) //exportSchema = false true In case of Migration
-public abstract class LbRoomDatabase : RoomDatabase() {
+public abstract class BpRoomDatabase : RoomDatabase() {
 
-    abstract fun userDao(): UserDao
+    abstract fun userDao(): AppUsagesDao
 
     companion object {
 
         @Volatile    //This will guarantee visibility of changes for other threads as soon as the value is changed
-        private var INSTANCE: LbRoomDatabase? = null
+        private var INSTANCE: BpRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): LbRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): BpRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    LbRoomDatabase::class.java,
-                    "lawbook_db"
+                    BpRoomDatabase::class.java,
+                    "panda"
                 ).build()
 
                 INSTANCE = instance
