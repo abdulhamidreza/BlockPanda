@@ -13,7 +13,7 @@ import com.suke.widget.SwitchButton
 import java.text.DateFormat
 
 
-class CustomAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class UsageStatsAdapter(private val mList: List<AppDetails>) : RecyclerView.Adapter<UsageStatsAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

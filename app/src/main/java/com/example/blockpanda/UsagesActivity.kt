@@ -60,7 +60,7 @@ class UsagesActivity : AppCompatActivity() {
         val recyclerview = findViewById<RecyclerView>(R.id.rvContacts)
         recyclerview.layoutManager = LinearLayoutManager(this)
         contacts = getAppDetails(usageStateList())
-        val adapter = CustomAdapter(contacts!!)
+        val adapter = UsageStatsAdapter(contacts!!)
         recyclerview.adapter = adapter
 
 
