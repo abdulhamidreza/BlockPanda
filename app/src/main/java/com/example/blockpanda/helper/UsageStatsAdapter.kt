@@ -28,7 +28,7 @@ class UsageStatsAdapter(private val mList: List<AppDetails>) : RecyclerView.Adap
 
         val item = mList[position]
         holder.imageView.setImageDrawable(item.drawable)
-        holder.textView.text = item.pkgUsages.packageName
+        holder.textView.text = item.usagesDb.appName
 
         holder.textViewDay.text = DateUtils.formatSameDayTime(
             item.pkgUsages.lastTimeUsed,
@@ -38,8 +38,8 @@ class UsageStatsAdapter(private val mList: List<AppDetails>) : RecyclerView.Adap
             DateUtils.formatElapsedTime(item.pkgUsages.totalTimeInForeground / 1000)
         );
 
-        holder.textViewDay.text = DateUtils.formatSameDayTime(
-            item.pkgUsages.lastTimeUsed,
+        holder.textViewMn.text = DateUtils.formatSameDayTime(
+            item.pkgUsages.firstTimeStamp,
             System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM
         )
 

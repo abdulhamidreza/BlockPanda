@@ -59,9 +59,6 @@ class UsagesActivity : AppCompatActivity() {
         // getting the recyclerview by its id
         val recyclerview = findViewById<RecyclerView>(R.id.rvContacts)
         recyclerview.layoutManager = LinearLayoutManager(this)
-        contacts = getAppDetails(usageStateList())
-        val adapter = UsageStatsAdapter(contacts!!)
-        recyclerview.adapter = adapter
 
 
         //Db Call
@@ -71,10 +68,9 @@ class UsagesActivity : AppCompatActivity() {
 
         usageViewModel.getAllUserList.observe(this) { appList ->
             run {
-                if (flagDbOnce) {
-                    flagDbOnce = false
-
-                }
+                contacts = getAppDetails(mPackageStats, appList)
+                val adapter = UsageStatsAdapter(contacts!!)
+                recyclerview.adapter = adapter
             }
 
         }
@@ -146,19 +142,21 @@ class UsagesActivity : AppCompatActivity() {
     }
 
 
-    fun getAppDetails(apps: ArrayList<UsageStats>): ArrayList<AppDetails> {
+    fun getAppDetails(apps: ArrayList<UsageStats>, appDb: MutableList<Usages>): ArrayList<AppDetails> {
         var appList = arrayListOf<AppDetails>()
-        for (i in apps) {
-            val s = AndroidPackageManagerWrappers.getAppIcons(baseContext)
-            val icon: Drawable = s.get(i.packageName)!!
-            appList.add(
-                AppDetails(
-                    icon, Usages(
-                        "", "", false, false, false, false, false,
-                        "", "", "", "", false, "", "", false
-                    ), i
-                )
-            )
+        for (i in appDb) {
+            for (j in apps) {
+                if (i.pkgName.equals(j.packageName)) {
+                    val s = AndroidPackageManagerWrappers.getAppIcons(baseContext)
+                    val icon: Drawable = s.get(i.pkgName)!!
+                    appList.add(
+                        AppDetails(
+                            icon, i, j
+                        )
+                    )
+                }
+            }
+
         }
         return appList
     }
