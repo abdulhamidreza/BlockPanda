@@ -9,6 +9,9 @@ interface AppUsagesDao {
     @Query("SELECT * FROM AppUsages")
     fun getAllAppUsages(): Flow<MutableList<Usages>> //Flow to observer db changes in real time
 
+    @Query("SELECT * FROM AppUsages")
+    fun getAllAppUsagesOnce(): MutableList<Usages>
+
     @Query("SELECT * FROM AppUsages WHERE pkgName = :pkgName LIMIT 1")
     fun getAppUsages(pkgName: String): Usages
 

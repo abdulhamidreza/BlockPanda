@@ -13,6 +13,12 @@ class UsagesRepository(private val appUsagesDao: AppUsagesDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    suspend fun getAllAppUsagesOnce(): List<Usages> {
+        return appUsagesDao.getAllAppUsagesOnce()
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun insertAppUsages(usages: Usages) {
         appUsagesDao.insertAppUsages(usages)
     }

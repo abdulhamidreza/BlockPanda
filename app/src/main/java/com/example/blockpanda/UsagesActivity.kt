@@ -66,11 +66,13 @@ class UsagesActivity : AppCompatActivity() {
 
         //Db Call
         var flagDbOnce = true
+        usageViewModel.insertNewApp( usageStateList(), mPm)
+
+
         usageViewModel.getAllUserList.observe(this) { appList ->
             run {
                 if (flagDbOnce) {
                     flagDbOnce = false
-                   usageViewModel.insertNewApp(appList, usageStateList(), mPm)
 
                 }
             }
